@@ -7,22 +7,27 @@ import {
   Card,
   Row
 } from 'react-bootstrap';
-
-import Auth from '../utils/auth';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
-import { useMutation } from '@apollo/client';
 import { SAVE_BOOK } from '../utils/mutations';
+import Auth from '../utils/auth';
+import { useMutation } from '@apollo/client';
+import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
+
   const [searchedBooks, setSearchedBooks] = useState([]);
+
   const [searchInput, setSearchInput] = useState('');
-  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds())
+
+
+  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
+
+
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   });
 
-
+  // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -56,20 +61,22 @@ const SearchBooks = () => {
     }
   };
 
- 
   const handleSaveBook = async (bookId) => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    console.log(searchedBooks)
+    console.log(bookToSave)
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
+ console.log(token)
     if (!token) {
       return false;
     }
-
+   
     try {
-      const { data } = await saveBook({
-        variables: { newBook: { ...bookToSave } },
-      });
-
+   await saveBook({
+        variables:{bookInput:bookToSave}
+      
+      })
+ 
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);
@@ -77,7 +84,7 @@ const SearchBooks = () => {
   };
   return (
     <>
-      <div className='text-light bg-dark pt-5'>
+      <div className="text-light bg-dark p-5">
         <Container>
           <h1>Search for Books!</h1>
           <Form onSubmit={handleFormSubmit}>
