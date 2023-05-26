@@ -7,20 +7,22 @@ import {
   Col
 } from 'react-bootstrap';
 
-import Auth from '../utils/auth';
-import { removeBookId } from '../utils/localStorage';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_ME } from '../utils/queries';
-import { REMOVE_BOOK } from '../utils/mutations';
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import { GET_ME } from "../utils/queries";
+import { REMOVE_BOOK } from "../utils/mutations";
+import Auth from "../utils/auth";
+import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+
+  //debugger
+  // reload user data using the GET_ME call
   const userData = data?.me || {};
-;
+  console.log(userData);
 
-
-
+  // function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -29,17 +31,23 @@ const SavedBooks = () => {
     }
 
     try {
+      // eslint-disable-next-line
       const { data } = await removeBook({
         variables: { bookId },
       });
 
-      removeBookId(bookId);;
+      if (error) {
+        throw new Error("something went wrong!");
+      }
+
+      // upon success, remove book's id from localStorage
+      removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
   };
 
-
+  // if data isn't here yet, say so
   if (loading) {
     return <h2>LOADING...</h2>;
   }
@@ -52,7 +60,7 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className='pt-5'>
-     {userData.savedBooks.length>0
+     {userData.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
