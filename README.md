@@ -45,7 +45,7 @@ A simple  search and save  Book webpage using Google Books API powerd by GraphQL
 ## Links
 
 - [GitHub Repository](https://github.com/kumenger/book-serach-engine-fullstack)
-- [Deployed Application](https://github.com/kumenger/book-serach-engine-fullstack)
+- [Deployed Application](https://kume-book-app.herokuapp.com/)
 
 ---
 
