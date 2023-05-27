@@ -20,7 +20,7 @@ const SavedBooks = () => {
   //debugger
   // reload user data using the GET_ME call
   const userData = data?.me || {};
-  console.log(data);
+
 
   // function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -51,6 +51,7 @@ const SavedBooks = () => {
   if (loading) {
     return <h2>LOADING...</h2>;
   }
+ 
   return (
     <>
       <div fluid className='text-light bg-dark p-5'>
@@ -60,12 +61,12 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className='pt-5'>
-     {userData.savedBooks?.length
+     {userData.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData?.savedBooks?.map((book) => {
+          {userData?.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>
